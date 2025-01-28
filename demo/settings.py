@@ -38,7 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'async_notifications',
     'ckeditor',
-    'markitup'
+    'markitup',
+    'markdown',
+    'django_celery_beat',
+    'django_celery_results'
 ]
 
 MIDDLEWARE = [
@@ -53,7 +56,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'demo.urls'
 
-#ASYNC_TEMPLATES_NOTIFICATION = os.path.abspath(os.path.join(BASE_DIR, 'templates'))
+# ASYNC_TEMPLATES_NOTIFICATION = os.path.abspath(os.path.join(BASE_DIR, 'templates'))
 
 TEMPLATES = [
     {
@@ -128,10 +131,22 @@ STATIC_URL = '/static/'
 CELERY_MODULE = "demo.celery"
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ACCEPT_CONTENT = ['pickle', 'json']
+# CELERY_ACCEPT_CONTENT = ['json']
 
-DEFAULT_FROM_EMAIL="mail@example.com"
-EMAIL_HOST="localhost"
-EMAIL_PORT="1025"
+'''
+Variables de entorno para acceder a mailhog y hacer pruebas
+'''
+'''EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025 '''
+
+DEFAULT_FROM_EMAIL = "mail@example.com"
+EMAIL_HOST = "localhost"
+EMAIL_PORT = 1025
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'localhost'
+# EMAIL_PORT = 1025
+
 ASYNC_NOTIFICATION_TEXT_AREA_WIDGET = 'ckeditor.widgets.CKEditorWidget'
 ASYNC_NEWSLETTER_WIDGET = 'markitup.widgets.AdminMarkItUpWidget'
 MARKITUP_FILTER = ('markdown.markdown', {'safe_mode': True})
@@ -141,12 +156,15 @@ ASYNC_NEWS_BASE_MODELS = {
 
 # docker run -d --rm --name  redis -p 6379:6379 -d redis
 # pip install redis
-#CELERY_BROKER_URL =  'redis://localhost:6379/0'
-
+# CELERY_BROKER_URL =  'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+# CELERY_BROKER_URL = 'amqp://guest:guest@demo-rabbitmq:5672//'
+# BROKER_URL = 'amqp://guest:guest@demo-rabbitmq:5672//'
+# CELERY_RESULT_BACKEND = 'django-db'
 # with rabbitmq
 # service rabbitmq-server start
 
-ASYNC_BCC  = 'ejemplo@luisza.com'
+ASYNC_BCC = 'ejemplo@luisza.com'
 ASYNC_CC = 'ejemplo@luisza.com,ejemplo2@luisza.com'
 
 MARKITUP_SET = 'markitup/sets/markdown/'
