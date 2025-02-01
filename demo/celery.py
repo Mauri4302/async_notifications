@@ -27,6 +27,7 @@ app.conf.CELERYBEAT_SCHEDULE = {
     # execute 12:30 pm
     'send_daily_emails': {
         'task': 'async_notifications.tasks.send_daily',
+        # 'task2': 'async_notifications.tasks.send_mail',
         #'schedule': crontab(minute=30, hour=0),
         'schedule': crontab(minute='*/1'),
     },

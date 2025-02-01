@@ -28,7 +28,7 @@ def _send_email(obj, mails, bcc=None, cc=None):
             connection.connection.set_debuglevel(1)
         message = mail.EmailMessage(obj.subject, obj.message,
                                     settings.DEFAULT_FROM_EMAIL,
-                                    mails,
+                                    [mails],
                                     bcc=bcc,
                                     cc=cc,
                                     connection=connection
@@ -70,10 +70,12 @@ def send_email(obj):
         mails = SEND_ONLY_EMAIL
         bcc=None
         cc=None
+        print(f"if Enviando emails {mails}")
     else:
         mails = list(get_all_emails(obj.recipient))
         bcc = list(get_all_emails(obj.bcc))
         cc = list(get_all_emails(obj.cc))
+    print(f"else Emails a enviar: {mails}")  # Esto te permitirá ver cómo llegan los correos
 
     while len(mails) > MAX_PER_MAIL:
         s_mails = mails[:MAX_PER_MAIL]
@@ -99,4 +101,5 @@ def send_daily():
 
 @app.task
 def task_send_newsletter(pk):
+    print(f"Emails a enviar: {pk}")
     return task_send_newsletter_fnc(pk)

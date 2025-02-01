@@ -1,3 +1,5 @@
+import json
+
 from django.http import QueryDict
 
 from async_notifications.models import NewsLetter, NewsLetterTask, NewsLetterTemplate
@@ -51,7 +53,18 @@ def get_subject_content(newsletter):
     dev = message.render(Context({}))
     return dev
 
+# Funcion creada por luis
+'''def extract_separedcomma_emails(text):
+    return text.split(', ')'''
+
+#Funcion creada por mi para probar
 def extract_separedcomma_emails(text):
+    try:
+        emails_list = json.loads(text)
+        if isinstance(emails_list, list):
+            return [email["value"] for email in emails_list if "value" in email]
+    except json.JSONDecodeError:
+        print("❌ Error: `newsletter.recipient` no es un JSON válido")
     return text.split(', ')
 
 def get_newsletter_content(newsletter, useform=True):
@@ -99,6 +112,10 @@ def send_newsletter(newsletter):
             connection.connection.set_debuglevel(1)
         headers = get_headers()
         for email, messagetxt, subject in get_newsletter_content(newsletter, useform=False):
+            print(f"Email antes de limpiar: {email}")
+            # Esto lo acabo de agregar yo para ver si funciona
+            if isinstance(email, dict) and "value" in email:
+                email = email["value"]
             message = mail.EmailMessage(subject, messagetxt,
                                         get_from_email(),
                                         [email],
@@ -112,6 +129,7 @@ def send_newsletter(newsletter):
             messages.append(message)
         connection.fail_silently = True
         logs['total_sent'] = connection.send_messages(messages)
+        print(f"Logs en sent_newsletter: {logs}")
     return logs
 
 
@@ -120,6 +138,7 @@ def task_send_newsletter_fnc(pk):
     logs={'total_sent': 0}
     if newsletter:
         logs = send_newsletter(newsletter)
+        print(f"Logs en task_sent_newsletter_fnc() {logs}")
     return logs['total_sent']
 
 

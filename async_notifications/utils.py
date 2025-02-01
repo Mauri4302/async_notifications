@@ -116,7 +116,9 @@ def send_email_from_template(code, recipient,
 
 def extract_emails(text):
     try:
-        mails = [item['value'] for item in json.loads(text)]
+        # Cadena original [item['value'] for item in json.loads(text)]
+        mails = [item['value'] for item in json.loads(text) if isinstance(item, dict) and 'value' in item]
+        print(f"Emails extraidos en extract_emails:  {text}")
     except Exception as e:
         mails = list(re.findall(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', text))
         mails += list(re.findall(r'\b[A-Za-z0-9._%+-]+@group', text))

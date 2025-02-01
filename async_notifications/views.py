@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.http.request import QueryDict
-
+from django.views import generic
 from async_notifications.forms import TagifyFormValue
 from async_notifications.lookups import FindEmailsByText
 # Create your views here.
@@ -71,3 +71,9 @@ def email_to_tagify(request):
     if value:
         query = FindEmailsByText().get_query(value, request)
     return JsonResponse(query, safe=False)
+
+'''
+def formContext(request):
+
+    return render(request,'admin/async_notifications/newsletter/change_form.html',{ "opts": NewsLetterTemplate._meta})
+    '''

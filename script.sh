@@ -19,7 +19,8 @@ echo "Esperando el inicio de rabbitmq ..." && sleep 20
 # Start Celery Worker
 # cd src/
 # celery -A demo worker -l info -B --scheduler django_celery_beat.schedulers:DatabaseScheduler
-celery -A demo worker -l info -B --scheduler django_celery_beat.schedulers:DatabaseScheduler
+celery -A demo worker -l info -B
+# --scheduler django_celery_beat.schedulers:DatabaseScheduler
 # Clean containers at the end (optional)
 # cd ../
 # docker rm -f demo-mail

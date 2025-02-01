@@ -39,6 +39,7 @@ def get_all_emails(text):
     if text is None:
         return []
     mails = extract_emails(text)
+    print(f"get_all_emails:   {text}")
 
     gmails = []
     for mail in mails:

@@ -68,12 +68,15 @@ class MyNotification(admin.ModelAdmin):
         obj.save()
 
     def send_now(self, request, queryset):
+        print(f"Enviando desde send_now {request} --- {queryset}")
         for email in queryset:
             send_email.delay(email.pk)
     send_now.short_description = _("Send email now")
 
     def recipient_emails(self, obj):
         mails = extract_emails(obj.recipient)
+        print(f"Emails extraidos en recipient_emails: {mails}")
+        # la cantidad de emails tiene que ser mayor a 5.
         if len(mails) > 5:
             return ", ".join(mails[:5]) + str(_(" and more"))
         return ", ".join(mails)
@@ -137,8 +140,8 @@ class NewsLetterAdmin(admin.ModelAdmin):
         for obj in queryset:
            #task_send_newsletter(obj.pk)
            task_send_newsletter.delay(obj.pk)
-
-    send_newsletter.short_description = "Send newsletter"
+    # En esta linea agregue Edit e la cadena
+    send_newsletter.short_description = "Send newsletter Edit"
 
     def save_model(self, request, obj, form, change):
         if not hasattr(obj, 'creator') or obj.creator is None:
